@@ -1,8 +1,9 @@
 import { betterAuth } from "better-auth";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
+import { env } from "#/env";
 
 export const auth = betterAuth({
-	baseURL: "http://127.0.0.1:3000",
+	baseURL: env.BETTER_AUTH_URL,
 	emailAndPassword: {
 		enabled: true,
 	},
