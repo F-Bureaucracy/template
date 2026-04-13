@@ -4,6 +4,7 @@ import {
 	HeadContent,
 	Scripts,
 } from "@tanstack/react-router";
+import { NotFound } from "#/components/not-found";
 import { Toaster } from "#/components/ui/sonner";
 import { TooltipProvider } from "#/components/ui/tooltip";
 import appCss from "../globals.css?url";
@@ -25,7 +26,8 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 				content: "width=device-width, initial-scale=1",
 			},
 			{
-				title: "TanStack Start Starter",
+				title: "F-Bau Starter",
+				// description: "",
 			},
 		],
 		links: [
@@ -35,6 +37,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 			},
 		],
 	}),
+	notFoundComponent: () => <NotFound />,
 	shellComponent: RootDocument,
 });
 
