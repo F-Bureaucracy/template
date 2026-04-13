@@ -1,12 +1,12 @@
 import { Link } from "@tanstack/react-router";
-import { Button } from "@/components/ui/button";
+import { Button } from "#/components/ui/button";
 import {
 	Empty,
 	EmptyContent,
 	EmptyDescription,
 	EmptyHeader,
 	EmptyTitle,
-} from "@/components/ui/empty";
+} from "#/components/ui/empty";
 
 export function NotFound() {
 	return (

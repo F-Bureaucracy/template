@@ -2,17 +2,17 @@ import { useForm } from "@tanstack/react-form";
 import { Link, useRouter } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { z } from "zod";
-import { Button } from "@/components/ui/button";
+import { Button } from "#/components/ui/button";
 import {
 	Field,
 	FieldDescription,
 	FieldError,
 	FieldGroup,
 	FieldLabel,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { authClient } from "@/lib/auth-client";
-import { cn } from "@/lib/utils";
+} from "#/components/ui/field";
+import { Input } from "#/components/ui/input";
+import { authClient } from "#/lib/auth-client";
+import { cn } from "#/lib/utils";
 
 const signupSchema = z
 	.object({
