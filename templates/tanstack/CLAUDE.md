@@ -1,66 +1,61 @@
 # CLAUDE.md
 
-This file provides guidance to Coding models when working with code in this repository.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Commands
 
 ```bash
-bun dev          # Dev server on port 3000
+bun dev          # Start dev server on port 3000
 bun build        # Production build
 bun test         # Run tests with Vitest
-bun run check    # Lint + format with Biome (run before committing)
-bun run format   # Format code
-bun run lint     # Lint code
+bun lint         # Biome lint
+bun check        # Biome check + auto-fix
+bun deploy       # Build + deploy to Cloudflare Workers
 
-bun run db:generate  # Generate Drizzle migrations
-bun run db:migrate   # Apply migrations
-bun run db:push      # Push schema directly (no migration file)
-bun run db:studio    # Open Drizzle Studio UI
+# Database
+bun db:push      # Push schema to DB (dev)
 ```
 
 ## Architecture
 
-**Stack**: TanStack Start (full-stack React framework) + Nitro server + PostgreSQL via Drizzle ORM + Better Auth
+Full-stack React SPA with SSR via TanStack Start, deployed to Cloudflare Workers.
 
-### Routing
+**Core stack**: React 19, TanStack Router (file-based), TanStack Query, TanStack Form, Vite, Nitro, TypeScript
 
-File-based routing via TanStack Router. Routes live in `src/routes/`. The file `src/routeTree.gen.ts` is **auto-generated** — never edit it manually. Nested folders create nested routes; `__root.tsx` is the layout wrapper; `$.tsx` is a catch-all (used for the auth API handler).
+**Routing**: File-based via `src/routes/`. Auto-generated route tree at `src/routeTree.gen.ts` — never edit this file manually. Server functions use `@tanstack/react-start` for RPC-style calls. Route protection via `beforeLoad` middleware.
 
-The router is initialized in `src/router.tsx` with QueryClient passed as context. Default preload strategy is `intent` (hover).
+**Auth**: Better Auth (`src/lib/auth.ts` server, `src/lib/auth-client.ts` client). Drizzle adapter with Turso/SQLite. Admin plugin enabled. Auth API handled at `src/routes/api/auth/$.ts`.
 
-### Data Fetching
+**Database**: Drizzle ORM + Turso (edge SQLite). Schema files in `src/db/schema/` — `auth.ts` for auth tables, `example.ts` as a template for new schemas. All schemas re-exported from `src/db/schema/index.ts`.
 
-TanStack Query manages server state. The QueryClient is set up in `src/integrations/tanstack-query/root-provider.tsx` and injected into router context. Use route loaders for data that must be present before render; use Query for data that can load async.
+**UI**: shadcn/ui components in `src/components/ui/`, Tailwind CSS v4, Lucide icons, Sonner toasts, next-themes for dark mode.
 
-### Authentication
+**Forms**: TanStack Form + Zod validation (not react-hook-form despite it being installed).
 
-Better Auth is configured in `src/lib/auth.ts` (server) and `src/lib/auth-client.ts` (browser). The auth API handler lives at `src/routes/api/auth/$.ts`. Use `authClient.useSession()` to access session state in components. Authentication uses cookies via the TanStack Start cookies plugin.
+## Environment Variables
 
-### Database
+Required in `.env.local`:
 
-Drizzle ORM with PostgreSQL (`pg` package). Schema defined in `src/db/schema.ts`. Connection instance in `src/db/index.ts`. Requires `DATABASE_URL` environment variable.
+```
+BETTER_AUTH_SECRET=
+BETTER_AUTH_URL=http://localhost:3000
+DATABASE_URL=libsql://[db].turso.io
+DATABASE_AUTH_TOKEN=
+```
 
-### Environment Variables
+Server env is validated at startup via `@t3-oss/env-core` + Zod in `src/env.ts`. Client-side vars must be prefixed with `VITE_`.
 
-T3Env provides type-safe env vars in `src/env.ts`. Server-only vars go in the `server` block; client-accessible vars use the `VITE_` prefix and go in the `client` block.
+## TypeScript Path Aliases
 
-### UI Components
+Use `#/*` for imports from `src/`:
+```ts
+import { auth } from "#/lib/auth"
+```
 
-50+ shadcn/ui components (New York style, Zinc base color) live in `src/components/ui/`. They use Radix UI primitives, CVA for variants, and the `cn()` utility from `src/lib/utils.ts` for conditional Tailwind classes.
+## Linting/Formatting
 
-### Styling
+Biome (not ESLint/Prettier). Uses tabs. Run `bun check` to auto-fix. The `noChildrenProp` rule is disabled.
 
-Tailwind CSS 4 with a Vite plugin. Design tokens (custom colors: sea-ink, lagoon, palm) and dark mode CSS variables are defined in `src/styles.css`. Dark mode uses the `.dark` class selector. The theme toggle (light/dark/auto) persists to localStorage.
+## Deployment
 
-### Path Aliases
-
-Both `#/*` and `@/*` resolve to `./src/*`.
-
-## Key Conventions
-
-- **Linter/Formatter**: Biome (not ESLint/Prettier). Tabs for indentation, double quotes.
-- **Validation**: Zod 4 throughout — forms, env vars, API schemas.
-- **Forms**: TanStack Form is the primary form library; `react-hook-form` is also available.
-- **Icons**: Lucide React.
-- **Toasts**: Sonner (provider in `__root.tsx`).
-- **Tests**: Vitest + Testing Library + jsdom. No test files exist yet in the template.
+Deploys to Cloudflare Workers via Wrangler. Config in `wrangler.jsonc`. The `THREAD_ID` env var sets the deployment name during `bun deploy`.

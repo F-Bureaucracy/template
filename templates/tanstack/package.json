@@ -14,11 +14,8 @@
     "lint": "biome lint",
     "check": "biome check --write",
     "deploy": "bun run build && wrangler deploy --name $THREAD_ID",
-    "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
-    "db:pull": "drizzle-kit pull",
-    "db:studio": "drizzle-kit studio"
+    "db:pull": "drizzle-kit pull"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",
