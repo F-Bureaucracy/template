@@ -1,3 +1,5 @@
+// Edit this file to match your use case
+
 import {
 	closestCenter,
 	DndContext,

@@ -1,8 +1,9 @@
+import { Link, useRouter } from "@tanstack/react-router";
 import {
 	BellIcon,
 	CircleUserRoundIcon,
-	CreditCardIcon,
 	EllipsisVerticalIcon,
+	LogInIcon,
 	LogOutIcon,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "#/components/ui/avatar";
@@ -21,17 +22,39 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from "#/components/ui/sidebar";
+import { authClient } from "#/lib/auth-client";
 
-export function NavUser({
-	user,
-}: {
-	user: {
-		name: string;
-		email: string;
-		avatar: string;
-	};
-}) {
+export function NavUser() {
+	const { data: session } = authClient.useSession();
+	const user = session?.user;
+
 	const { isMobile } = useSidebar();
+	const router = useRouter();
+
+	const handleLogout = async () => {
+		await authClient.signOut({
+			fetchOptions: {
+				onSuccess: () => {
+					router.navigate({ to: "/login" });
+				},
+			},
+		});
+	};
+
+	if (!user) {
+		return (
+			<SidebarMenu>
+				<SidebarMenuItem>
+					<SidebarMenuButton size="lg" asChild>
+						<Link to="/login">
+							<LogInIcon className="size-4" />
+							<span className="font-medium">Login</span>
+						</Link>
+					</SidebarMenuButton>
+				</SidebarMenuItem>
+			</SidebarMenu>
+		);
+	}
 
 	return (
 		<SidebarMenu>
@@ -42,9 +65,16 @@ export function NavUser({
 							size="lg"
 							className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
 						>
-							<Avatar className="h-8 w-8 rounded-lg grayscale">
-								<AvatarImage src={user.avatar} alt={user.name} />
-								<AvatarFallback className="rounded-lg">CN</AvatarFallback>
+							<Avatar className="h-8 w-8 rounded-lg">
+								<AvatarImage src={user.image ?? undefined} alt={user.name} />
+								<AvatarFallback className="rounded-lg">
+									{user.name
+										.split(" ")
+										.map((n) => n[0])
+										.join("")
+										.toUpperCase()
+										.slice(0, 2)}
+								</AvatarFallback>
 							</Avatar>
 							<div className="grid flex-1 text-left text-sm leading-tight">
 								<span className="truncate font-medium">{user.name}</span>
@@ -64,9 +94,17 @@ export function NavUser({
 						<DropdownMenuLabel className="p-0 font-normal">
 							<div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
 								<Avatar className="h-8 w-8 rounded-lg">
-									<AvatarImage src={user.avatar} alt={user.name} />
-									<AvatarFallback className="rounded-lg">CN</AvatarFallback>
+									<AvatarImage src={user.image ?? undefined} alt={user.name} />
+									<AvatarFallback className="rounded-lg">
+										{user.name
+											.split(" ")
+											.map((n) => n[0])
+											.join("")
+											.toUpperCase()
+											.slice(0, 2)}
+									</AvatarFallback>
 								</Avatar>
+
 								<div className="grid flex-1 text-left text-sm leading-tight">
 									<span className="truncate font-medium">{user.name}</span>
 									<span className="truncate text-xs text-muted-foreground">
@@ -82,16 +120,12 @@ export function NavUser({
 								Account
 							</DropdownMenuItem>
 							<DropdownMenuItem>
-								<CreditCardIcon />
-								Billing
-							</DropdownMenuItem>
-							<DropdownMenuItem>
 								<BellIcon />
 								Notifications
 							</DropdownMenuItem>
 						</DropdownMenuGroup>
 						<DropdownMenuSeparator />
-						<DropdownMenuItem>
+						<DropdownMenuItem onSelect={handleLogout}>
 							<LogOutIcon />
 							Log out
 						</DropdownMenuItem>

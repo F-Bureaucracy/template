@@ -28,6 +28,7 @@ import {
 	SidebarMenuButton,
 	SidebarMenuItem,
 } from "#/components/ui/sidebar";
+import { Link } from "@tanstack/react-router";
 
 const data = {
 	user: {
@@ -156,10 +157,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 							asChild
 							className="data-[slot=sidebar-menu-button]:p-1.5!"
 						>
-							<a href="#">
+							<Link to="/">
 								<CommandIcon className="size-5!" />
-								<span className="text-base font-semibold">Acme Inc.</span>
-							</a>
+								<span className="text-base font-semibold">F-Bureaucracy</span>
+							</Link>
 						</SidebarMenuButton>
 					</SidebarMenuItem>
 				</SidebarMenu>
