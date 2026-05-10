@@ -12,19 +12,14 @@
 
 	// This is sample data.
 	const data = {
-		user: {
-			name: "shadcn",
-			email: "m@example.com",
-			avatar: "/avatars/shadcn.jpg",
-		},
 		teams: [
 			{
-				name: "Acme Inc",
+				name: "F-Bureaucracy",
 				logo: GalleryVerticalEndIcon,
 				plan: "Enterprise",
 			},
 			{
-				name: "Acme Corp.",
+				name: "F-Bureaucracy",
 				logo: AudioWaveformIcon,
 				plan: "Startup",
 			},
