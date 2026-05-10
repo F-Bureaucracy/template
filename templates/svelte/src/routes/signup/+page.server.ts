@@ -8,7 +8,7 @@ import { signupSchema } from "./schema";
 
 export const load: PageServerLoad = async (event) => {
   if (event.locals.user) {
-    return redirect(302, "/projects");
+    return redirect(302, "/");
   }
   return { form: await superValidate(zod4(signupSchema)) };
 };
@@ -42,6 +42,6 @@ export const actions: Actions = {
       return fail(500, { form, message: "Unexpected error" });
     }
 
-    return redirect(302, "/projects");
+    return redirect(302, "/");
   },
 };
