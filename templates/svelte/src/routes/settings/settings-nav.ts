@@ -1,4 +1,4 @@
-import { CpuIcon, GitBranchIcon, UserIcon } from "@lucide/svelte";
+import { UserIcon } from "@lucide/svelte";
 
 export const settingsNav = [
   {

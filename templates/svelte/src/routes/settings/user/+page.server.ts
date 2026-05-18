@@ -1,4 +1,4 @@
-import { fail, redirect } from "@sveltejs/kit";
+import { fail } from "@sveltejs/kit";
 import { APIError } from "better-auth/api";
 import { message, superValidate } from "sveltekit-superforms";
 import { zod4 } from "sveltekit-superforms/adapters";
@@ -14,13 +14,9 @@ const formIds = {
 };
 
 export const load: PageServerLoad = async (event) => {
-  const user = event.locals.user;
-  if (!user) {
-    throw redirect(302, "/login");
-  }
+  const user = event.locals.user!;
 
   return {
-    user,
     profileForm: await superValidate(
       { name: user.name, image: user.image ?? "" },
       zod4(profileSchema),
@@ -111,10 +107,6 @@ export const actions: Actions = {
         { status: 400 },
       );
     }
-
-    form.data.currentPassword = "";
-    form.data.newPassword = "";
-    form.data.confirmPassword = "";
 
     return message(form, "Password updated");
   },
