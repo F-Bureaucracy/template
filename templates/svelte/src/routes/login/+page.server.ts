@@ -1,6 +1,6 @@
-import { fail, redirect } from "@sveltejs/kit";
+import { redirect } from "@sveltejs/kit";
 import { APIError } from "better-auth/api";
-import { superValidate } from "sveltekit-superforms";
+import { fail, message, superValidate } from "sveltekit-superforms";
 import { zod4 } from "sveltekit-superforms/adapters";
 import { auth } from "$lib/server/auth";
 import type { Actions, PageServerLoad } from "./$types";
@@ -17,9 +17,7 @@ export const actions: Actions = {
   default: async (event) => {
     const form = await superValidate(event, zod4(loginSchema));
     if (!form.valid) {
-      return fail(400, {
-        form,
-      });
+      return fail(400, { form });
     }
     const { email, password } = form.data;
 
@@ -33,9 +31,11 @@ export const actions: Actions = {
       });
     } catch (error) {
       if (error instanceof APIError) {
-        return fail(400, { form, message: error.message || "Signin failed" });
+        return message(form, error.message || "Signin failed", {
+          status: 400,
+        });
       }
-      return fail(500, { form, message: "Unexpected error" });
+      return message(form, "Unexpected error", { status: 500 });
     }
 
     return redirect(302, "/");

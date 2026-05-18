@@ -6,11 +6,20 @@ import * as Form from '$lib/components/ui/form/index.js';
 import { Input } from '$lib/components/ui/input/index.js';
 import { cn } from '$lib/utils.js';
 import { type FormSchema, loginSchema } from './schema.ts';
+import { toast } from 'svelte-sonner';
 
 let { data }: { data: { form: SuperValidated<Infer<FormSchema>> } } = $props();
 
 const form = superForm(data.form, {
 	validators: zod4Client(loginSchema),
+	onUpdated: ({ form }) => {
+		if (!form.valid && form.message) {
+			toast.error(form.message);
+		}
+	},
+	onError: ({ result }) => {
+		toast.error(result.error.message ?? 'Unexpected error');
+	},
 });
 const { form: formData, enhance } = form;
 </script>
