@@ -19,7 +19,7 @@
 				plan: "Enterprise",
 			},
 			{
-				name: "F-Bureaucracy",
+				name: "Acme Inc.",
 				logo: AudioWaveformIcon,
 				plan: "Startup",
 			},
