@@ -3,12 +3,6 @@
 	import * as Breadcrumb from "$lib/components/ui/breadcrumb/index.js";
 	import { Separator } from "$lib/components/ui/separator/index.js";
 	import * as Sidebar from "$lib/components/ui/sidebar/index.js";
-  import { setContext } from "svelte";
-
-	import type { PageServerData } from './$types';
-	let { data }: { data: PageServerData } = $props();
-
-  setContext('user', data.user);
 </script>
 
 <Sidebar.Provider>

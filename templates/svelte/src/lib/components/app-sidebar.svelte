@@ -160,7 +160,7 @@
 		<NavProjects projects={data.projects} />
 	</Sidebar.Content>
 	<Sidebar.Footer>
-		<NavUser user={data.user} />
+		<NavUser />
 	</Sidebar.Footer>
 	<Sidebar.Rail />
 </Sidebar.Root>

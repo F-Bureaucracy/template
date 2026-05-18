@@ -12,11 +12,10 @@
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
   import * as Sidebar from '$lib/components/ui/sidebar/index.js';
   import { useSidebar } from '$lib/components/ui/sidebar/index.js';
-  import { getContext } from 'svelte';
-  import type { User } from 'better-auth/types';
+  import { page } from '$app/state';
 
   const sidebar = useSidebar();
-  const user: User = getContext('user');
+  const user = $derived(page.data.user);
 </script>
 
 <Sidebar.Menu>
