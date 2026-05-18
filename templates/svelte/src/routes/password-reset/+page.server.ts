@@ -22,13 +22,14 @@ export const actions: Actions = {
     const { email } = form.data;
 
     try {
-      await auth.api.forgetPassword({
+      await auth.api.requestPasswordReset({
         body: {
           email,
           redirectTo: "/password-reset/confirm",
         },
       });
     } catch (error) {
+      console.error("[password-reset] forgetPassword failed:", error);
       if (error instanceof APIError) {
         return message(form, error.message || "Could not send reset email", {
           status: 400,

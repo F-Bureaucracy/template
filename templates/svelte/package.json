@@ -59,6 +59,8 @@
     "vite": "^8.0.7"
   },
   "dependencies": {
-    "better-auth-audit-logs": "^0.3.0"
+    "@types/nodemailer": "^8.0.0",
+    "better-auth-audit-logs": "^0.3.0",
+    "nodemailer": "^8.0.7"
   }
 }
