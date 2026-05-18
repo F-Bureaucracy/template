@@ -99,7 +99,7 @@
 				<DropdownMenu.Separator />
 				<DropdownMenu.Item class="w-full">
 					{#snippet child({ props })}
-						<form method="POST" action="?/signOut">
+						<form method="POST" action="/auth/signout">
 							<button {...props} type="submit">
 								<LogOutIcon />
 								Log out
